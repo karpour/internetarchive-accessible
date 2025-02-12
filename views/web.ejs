@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Wayback Machine</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <center>
+            <h2><b>Wayback</b>Machine</h2>
+            <%- include('partials/waybacksearch') %>
+        </center>
+
+        <% if (results) { %>
+        <hr>
+        <p>Displaying <%= results.length %> results</p>
+
+        <tt>
+            <% results.forEach(r => { %>
+            <%= r.date %> 
+            <%= r.statuscode %> 
+            <a href="https://web.archive.org/web/<%= r.timestamp %>if_/<%= r.original %>"><%- r.original %></a><br>
+            <% }) %>
+        </tt>
+
+        <% } %>
+        <%- include('partials/footer') %>
+</body>
+</html>

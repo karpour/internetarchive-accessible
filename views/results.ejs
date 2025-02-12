@@ -1,0 +1,43 @@
+<html>
+
+<head>
+  <title>Internet Archive</title>
+</head>
+
+<body>
+  <%- include('partials/header') %>
+  <%- include('partials/nav') %>
+  <main>
+    <center>
+      <form action="/search" method="get">
+        Search:
+        <input type="text" placeholder="Search" name="query">
+        <button type="submit">Go</button>
+      </form>
+    </center>
+
+    <% if (results) { %>
+    <p>Found <%= numFound %> results</p>
+    <ul>
+      <% results.forEach(result => { %>
+      <li><a href="details/<%= result.identifier %>">
+          <%= result.title %>
+        </a></li>
+      <% }) %>
+    </ul>
+
+    <% if (results.page) { %>
+    <center>
+      <% if (results.page> 1) { %>
+      <a href="results?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Prev page</a> |
+      <% } %>
+      <a href="results?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Next page</a>
+    </center>
+    <% } %>
+    <% } %>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+
+</html>

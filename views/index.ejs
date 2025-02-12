@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>Internet Archive</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <%- include('partials/nav') %>
+    <main>
+        <center>
+            Search the history of over <%= (mediacountsRaw.web/1000000000).toFixed(0) %> billion web pages on the Internet.
+            <p><b>Wayback</b>Machine</p>
+            <%- include('partials/waybacksearch') %>
+        </center>
+
+        <hr>
+
+        <center>
+            <p>Internet Archive is a non-profit library of millions of free texts, movies, software, music, websites, and more.</p>
+            <table>
+                <tr>
+                    <th>Web&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    <th>Texts&nbsp;&nbsp;&nbsp;</th>
+                    <th>Videos&nbsp;&nbsp;</th>
+                    <th>Audio&nbsp;&nbsp;&nbsp;</th>
+                    <th>TV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    <th>Software</th>
+                    <th>Images&nbsp;&nbsp;</th>
+                    <th>Concerts</th>
+                    <th>Collections</th>
+                </tr>
+                <tr>
+                    <td><%= mediacounts.web %></td>
+                    <td><%= mediacounts.texts %></td>
+                    <td><%= mediacounts.movies %></td>
+                    <td><%= mediacounts.audio %></td>
+                    <td><%= mediacounts.tv %></td>
+                    <td><%= mediacounts.software %></td>
+                    <td><%= mediacounts.image %></td>
+                    <td><%= mediacounts.etree %></td>
+                    <td><%= mediacounts.collection %></td>
+                </tr>
+            </table>
+
+            <h2>Announcements</h2>
+
+            <% announcements.forEach(item => { %>
+            <a href="<%= item.link %>"><%= item.title %></a><br>
+            <% }); %>
+
+            <p> </p>
+
+            <form action="/search" method="get">
+                Search:
+                <input type="text" placeholder="Search" name="query">
+                <button type="submit">Go</button>
+            </form>
+        </center>
+
+        <h2>New to the Archive?</h2>
+
+        <ul>
+            <li><a href="#">How to search the archive</a></li>
+            <li><a href="#">How to download files</a></li>
+            <li><a href="#">Listening to music on the archive</a></li>
+            <li><a href="#">How do I find old web pages?</a></li>
+        </ul>
+
+        <h2>Top collections:</h2>
+        <ol>
+            <% topCollections.forEach(item => { %>
+            <li><a href="/details/<%= item.identifier %>"><%= item.title %> (<%= item.item_count %> items)</a></li>
+            <% }); %>
+        </ol>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

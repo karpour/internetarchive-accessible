@@ -1,0 +1,21 @@
+{
+  "name": "internetarchive-accessible",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Novotny",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "html-entities": "^2.5.2",
+    "internetarchive-ts": "file:../internetarchive-ts"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.0"
+  }
+}

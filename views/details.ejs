@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title><%= title %> : Internet Archive</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <%- include('partials/nav') %>
+    <main>
+        <h1><%= title %></h1>
+        <% if (creator) { %>
+        by <a href=""><%= creator %></a><br><br>
+        <% } %>
+
+        <% if (pubDate) { %>
+        Publication date: <%= pubDate %><br>
+        <% } %>
+        Topics: <% topics.forEach(topic => { %>
+        <a href=""><%= topic %></a>
+        <% }) %><br>
+        Item Size: <%= itemSize %><br><br>
+
+
+        <a href="https://archive.org/compress/<%= identifier %>">Download all files</a> |
+        <a href="/download/<%= identifier %>">Show files</a>
+
+        <h2>Description</h2>
+        <p>
+            <%- description %>
+        </p>
+
+        <h2>In collections</h2>
+        <ul>
+            <% collections.forEach(collection => { %>
+            <li><a href="/details/<%= collection.name %>"><%= collection.identifier %></a></li>
+            <% }) %><br>
+        </ul>
+        Uploaded by <a href=""><%= uploader %></a> on <%= uploadDate %>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

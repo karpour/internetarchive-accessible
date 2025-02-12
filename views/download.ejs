@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title><%= identifier %> directory listing</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <h2>Files for <a href="/details/<%= identifier %>"><%= identifier %></a></h2>
+
+        <tt>
+            Last Modified&nbsp;&nbsp;&nbsp;Size&nbsp;&nbsp;&nbsp;Name<br>
+            ------------------------------<br>
+            <% files.forEach(f => { %>
+            <%= f.date %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%- f.size.padEnd(7," ").replaceAll(" ","&nbsp;") %><a href="https://archive.org/download/<%= identifier %>/<%= f.name %>"><%= f.name %></a><br>
+            <% }) %>
+        </tt>
+    </main>
+</body>
+</html>
