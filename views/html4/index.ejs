@@ -1,0 +1,116 @@
+<html>
+<head>
+    <title>Internet Archive</title>
+</head>
+
+<body TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" link="#999999" bgcolor="#f5f5f7" vlink="#999999">
+    <font face="Arial">
+        <table BORDER="0" CELLSPACING=0 CELLPADDING=6 width="100%" height="24">
+            <%- include('partials/header') %>
+            <%- include('partials/waybacksearch') %>
+        </table>
+        &nbsp;<br>
+        <center>
+            <table width="80%" cellspacing=5 cellpadding="5" border="0">
+                <tr>
+                    <td width="100" align="center" bgcolor="#ffffff">
+                        <img src="iabig.gif">
+                    </td>
+                    <td bgcolor="#ffffff" align=center>
+                        <font size="2">
+                            Internet Archive is a non-profit library of millions of free texts, movies, software, music, websites, and more.
+                        </font>
+                        <font size="1"><br>&nbsp;</font>
+                        <table>
+                            <tr>
+                                <td align="center"><img src="web.gif"></td>
+                                <td align="center"><img src="texts.gif"></td>
+                                <td align="center"><img src="video.gif"></td>
+                                <td align="center"><img src="audio.gif"></td>
+                                <td align="center"><img src="tv.gif"></td>
+                                <td align="center"><img src="software.gif"></td>
+                                <td align="center"><img src="image.gif"></td>
+                                <td align="center"><img src="etree.gif"></td>
+                                <td align="center"><img src="collection.gif"></td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <font size="1"><a href="#">web</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">texts</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">movies</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">audio</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">tv</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">software</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">image</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">etree</a></font>
+                                </td>
+                                <td align="center">
+                                    <font size="1"><a href="#">collection</a></font>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <form action="/search" method="get">
+                            Search:
+                            <input type="text" placeholder="Search" name="query">
+                            <input type="submit" value="Go" />
+                        </form>
+                    </td>
+                    <td width="150" bgcolor="#ffffff">
+                        <font size="2">
+
+                            <b>Archive News</b><br>
+                            <% announcements.forEach(item => { %>
+                            <a href="<%= item.link %>"><%= item.title %></a><br>
+                            <% }); %>
+                        </font>
+                        <font size="1"><a href="#">more news</a></font>
+
+                    </td>
+                </tr>
+            </table>
+
+            <h2>Top Collections</h2>
+
+            <table cellspacing="0" cellpadding="8" bgcolor="#666666" width="80%">
+                <% topCollections.forEach(item => { %>
+                <tr>
+                    <td width="50" height="50"><img src="https://archive.org/services/img/<%= item.identifier %>" width=50 height="50"></td>
+                    <td align="left">
+                        <font color="white">
+                            <a href="/details/<%= item.identifier %>"><%= item.title %></a>
+                        </font>
+                    </td align="left">
+                    <td width=100>
+                        <font color="white" size="2">
+                            <%= item.item_count %> ITEMS
+                        </font>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" bgcolor="#f5f5f7">
+                        <font size="1">&nbsp;</font>
+                    </td>
+                </tr>
+                <% }); %>
+            </table>
+
+        </center>
+        <%- include('partials/footer') %>
+    </font>
+</body>
+</html>

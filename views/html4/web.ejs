@@ -1,0 +1,56 @@
+<html>
+<head>
+    <title>Internet Archive</title>
+</head>
+
+<body TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" link="#999999" bgcolor="#f5f5f7" vlink="#999999">
+
+    <font face="Arial">
+
+        <table BORDER="0" CELLSPACING=0 CELLPADDING=6 width="100%" height="24">
+            <tr BGCOLOR="#222222">
+                <td width="21px"><img src="ialogo.gif"></td>
+                <td valign="middle">
+                    <b>
+                        <font face="Times New Roman" size="5" color="#FFFFFF">Internet Archive</font>&nbsp; &nbsp;
+                    </b>
+                    <a href="#">WEB</a>&nbsp; &nbsp;
+                    <a href="#">TEXTS</a>&nbsp; &nbsp;
+                    <a href="#">VIDEO</a>&nbsp; &nbsp;
+                    <a href="#">AUDIO</a>&nbsp; &nbsp;
+                    <a href="#">SOFTWARE</a>&nbsp; &nbsp;
+                </td>
+            </tr>
+
+            <tr BGCOLOR="#333333">
+                <td align="center" COLSPAN="2">
+                    <font color="#FFFFFF">
+                        <a href="#">About</a>&nbsp; &nbsp;
+                        <a href="#">Blog</a>&nbsp; &nbsp;
+                        <a href="#">Projects</a>&nbsp; &nbsp;
+                        <a href="#">Help</a>&nbsp; &nbsp;
+                        <a href="#">Contact</a>&nbsp; &nbsp;
+                        <a href="#">Jobs</a>&nbsp; &nbsp;
+                        <a href="#">Volunteer</a>&nbsp; &nbsp;
+                        <a href="#">People</a>
+                    </font>
+                </td>
+            </tr>
+            <%- include('partials/waybacksearch') %>
+        </table>
+
+        <% if (locals.results) { %>
+        <hr>
+        <p>Displaying <%= results.length %> results</p>
+        <tt>
+            <% results.forEach(r => { %>
+            <%= r.date %>
+            <%= r.statuscode %>
+            <a href="https://web.archive.org/web/<%= r.timestamp %>if_/<%= r.original %>"><%- r.original %></a><br>
+            <% }) %>
+        </tt>
+        <% } %>
+        <%- include('partials/footer') %>
+    </font>
+</body>
+</html>

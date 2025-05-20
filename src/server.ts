@@ -1,14 +1,22 @@
 // server.ts
-import express, { query } from 'express';
+import express, { Response, NextFunction } from 'express';
 import path from 'path';
-import { getAnnouncements, getItem, getMediacounts, getTopCollections, IaApiItemNotFoundError, searchItems, getSnapshotMatches } from 'internetarchive-ts';
-import { request } from 'http';
+import {
+    getAnnouncements,
+    getItem,
+    getMediacounts,
+    getTopCollections,
+    IaApiItemNotFoundError,
+    searchItems,
+    getSnapshotMatches
+} from 'internetarchive-ts';
 import { makeArray } from './util/makeArray';
 import { decode } from 'html-entities';
 import dateToYYYYMMDD from './util/dateToYYYYMMDD';
 import { DEC_PREFIXES, formatUnit } from './util/formatUnit';
 import { parseWaybackTimestamp } from './util/parseWaybackTimestamp';
 import { tryParseInt } from './util/tryParseInt';
+import { detectMode } from './util/detectMode';
 
 const app = express();
 const port = 3005;
@@ -22,10 +30,13 @@ function printErr(url: string, err: Error) {
     console.error('\n');
 }
 
+app.use("/", express.static(path.join(__dirname, "..", "static")));
+
+app.use(detectMode);
+
 // Home page
 app.get('/', async (req, res) => {
     try {
-
         const announcements = await getAnnouncements();
         const mediacountsRaw = await getMediacounts();
         const mediacounts: Record<string, string> = {};
@@ -52,28 +63,40 @@ app.get('/', async (req, res) => {
 app.get('/contact', async (req, res) => {
     res.render('contact');
 });
+
 app.get('/projects', async (req, res) => {
     res.render('projects');
 });
+
 app.get('/people', async (req, res) => {
     res.render('people');
 });
+
 app.get('/volunteer', async (req, res) => {
     res.render('volunteer');
 });
+
 app.get('/donate', async (req, res) => {
     res.render('donate');
 });
+
 app.get('/about', async (req, res) => {
     res.render('about');
 });
+
+app.get('/ua', async (req, res) => {
+    console.log("USER AGENT");
+    console.log(req.get('user-agent'));
+    console.log(req.headers);
+    res.end(req.get('user-agent'));
+});
+
 
 // WaybackMachine search
 app.get('/web', async (req, res) => {
     // Render just search box if theres no query
     if (!req.query.query || req.query.query == "") {
-        res.render('web', { results: undefined });
-        res.end();
+        res.render('web');
         return;
     }
 
@@ -118,7 +141,6 @@ app.get('/download/:identifier', async (req, res) => {
         console.error(err);
         if (err instanceof IaApiItemNotFoundError) {
             res.status(404).render('notfound', { identifier });
-            return;
         } else {
             res.status(500).render('message', { message: err.message });
             printErr(req.url, err);
@@ -143,7 +165,7 @@ app.get('/details/:identifier', async (req, res) => {
             creator: item.metadata.creator,
             topics: item.metadata.subject ? makeArray(item.metadata.subject) : [],
             itemSize: item.item_size,
-            description: decode(item.metadata.description as string ?? "[No desription]"),
+            description: decode(item.metadata.description as string ?? "[No description]"),
             collections,
             uploader: item.metadata.uploader,
             uploadDate: item.metadata.addeddate,
@@ -173,9 +195,12 @@ app.get('/search', async (req, res) => {
     }
 });
 
+
 app.get('*', function (req, res) {
+    console.log(`404: ${req.url}`)
     res.status(404).render('message', { message: "Page not found" });
 });
+
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

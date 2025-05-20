@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title><%= title %> : Internet Archive</title>
+    <title><%= title %>: Internet Archive</title>
 </head>
 <body>
     <%- include('partials/header') %>
@@ -28,12 +28,14 @@
             <%- description %>
         </p>
 
+        <% if(collections.length > 0) { %>
         <h2>In collections</h2>
         <ul>
             <% collections.forEach(collection => { %>
             <li><a href="/details/<%= collection.name %>"><%= collection.identifier %></a></li>
             <% }) %><br>
         </ul>
+        <% } %>
         Uploaded by <a href=""><%= uploader %></a> on <%= uploadDate %>
     </main>
 

@@ -29,9 +29,9 @@
     <% if (results.page) { %>
     <center>
       <% if (results.page> 1) { %>
-      <a href="results?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Prev page</a> |
+      <a href="/search?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Prev page</a> |
       <% } %>
-      <a href="results?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Next page</a>
+      <a href="/search?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Next page</a>
     </center>
     <% } %>
     <% } %>
