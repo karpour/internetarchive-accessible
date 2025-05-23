@@ -1,7 +1,7 @@
 import express, { NextFunction, Response, Request } from "express";
 
 
-export const RENDER_MODES = ["text", "html4", "ppc"] as const;
+export const RENDER_MODES = ["text", "html4", "ppc", "wap", "wap2"] as const;
 export type RenderMode = typeof RENDER_MODES[number];
 
 declare module 'express-serve-static-core' {
@@ -24,7 +24,7 @@ export function detectMode(req: Request, res: Response, next: NextFunction) {
     const originalRender = res.render.bind(res);
     res.render = (view: string, options?: object, callback?: (err: Error, html: string) => void) => {
         const modePrefixedView = `${res.locals.mode}/${view}`;
-        return originalRender(modePrefixedView, options, callback);
+        return originalRender(modePrefixedView, { ...options, mode: res.locals.mode }, callback);
     };
 
     next();
@@ -36,7 +36,7 @@ export function getMode(headers: any): RenderMode {
         [/^(?:Lynx|Links|w3m)/, "text"],
         [/240x320/, "ppc"],
         [/MSPIE|Windows CE/, "html4"],
-        [/.*/, "html4"], // Default
+        [/.*/, "ppc"], // Default
     ];
     const ua = headers["user-agent"] || "";
     for (let [regExp, mode] of mapping) {

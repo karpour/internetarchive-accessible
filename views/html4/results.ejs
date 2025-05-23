@@ -17,27 +17,31 @@
                 </td>
             </tr>
         </table>
-        <p>
-            <% if (results) { %>
-            <p>Found <%= numFound %> results</p>
-            <ul>
-                <% results.forEach(result => { %>
-                <li><a href="details/<%= result.identifier %>">
-                        <%= result.title %>
-                    </a></li>
-                <% }) %>
-            </ul>
+        <table BORDER="0" CELLSPACING=10 CELLPADDING=10 width="100%">
+            <tr>
+                <td>
+                    <% if (locals.results) { %>
+                    <p>Found <%= numFound %> results</p>
+                    <ul>
+                        <% results.forEach(result => { %>
+                        <li><a href="details/<%= result.identifier %>">
+                                <%= result.title %>
+                            </a></li>
+                        <% }) %>
+                    </ul>
 
-            <% if (results.page) { %>
-            <center>
-                <% if (results.page> 1) { %>
-                <a href="/search?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Prev page</a> |
-                <% } %>
-                <a href="/search?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Next page</a>
-            </center>
-            <% } %>
-            <% } %>
-        </p>
+                    <% if (results.page) { %>
+                    <center>
+                        <% if (results.page> 1) { %>
+                        <a href="/search?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Prev page</a> |
+                        <% } %>
+                        <a href="/search?query=<%= encodeURIComponent(query) %>&page=<%= (page-1) %>">Next page</a>
+                    </center>
+                    <% } %>
+                    <% } %>
+                </td>
+            </tr>
+        </table>
         <%- include('partials/footer') %>
     </font>
 </body>

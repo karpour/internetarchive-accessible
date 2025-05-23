@@ -1,31 +1,28 @@
 <html>
 <head>
-    <title>Internet Archive</title>
+    <title><%= identifier %>: Internet Archive</title>
 </head>
 
 <body TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" link="#999999" bgcolor="#f5f5f7" vlink="#999999">
     <font face="Arial">
         <table BORDER="0" CELLSPACING=0 CELLPADDING=6 width="100%" height="24">
             <%- include('partials/header') %>
-            <%- include('partials/waybacksearch') %>
         </table>
 
-        <% if (locals.results) { %>
         <table BORDER="0" CELLSPACING=10 CELLPADDING=10 width="100%">
             <tr>
                 <td>
-                    <p>Displaying <%= results.length %> results</p>
+                    <h2>Files for <a href="/details/<%= identifier %>"><%= identifier %></a></h2>
                     <tt>
-                        <% results.forEach(r => { %>
-                        <%= r.date %>
-                        <%= r.statuscode %>
-                        <a href="http://web.archive.org/web/<%= r.timestamp %>if_/<%= r.original %>"><%- r.original %></a><br>
+                        Last Modified&nbsp;&nbsp;&nbsp;Size&nbsp;&nbsp;&nbsp;Name<br>
+                        ------------------------------<br>
+                        <% files.forEach(f => { %>
+                        <%= f.date %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%- f.size.padEnd(7," ").replaceAll(" ","&nbsp;") %><a href="https://archive.org/download/<%= identifier %>/<%= f.name %>"><%= f.name %></a><br>
                         <% }) %>
                     </tt>
                 </td>
             </tr>
         </table>
-        <% } %>
         <%- include('partials/footer') %>
     </font>
 </body>

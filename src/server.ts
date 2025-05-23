@@ -8,7 +8,9 @@ import {
     getTopCollections,
     IaApiItemNotFoundError,
     searchItems,
-    getSnapshotMatches
+    getSnapshotMatches,
+    getShortViewcounts,
+    isValidIaIdentifier
 } from 'internetarchive-ts';
 import { makeArray } from './util/makeArray';
 import { decode } from 'html-entities';
@@ -17,6 +19,8 @@ import { DEC_PREFIXES, formatUnit } from './util/formatUnit';
 import { parseWaybackTimestamp } from './util/parseWaybackTimestamp';
 import { tryParseInt } from './util/tryParseInt';
 import { detectMode } from './util/detectMode';
+import { pipeline } from 'stream';
+import { getImageStream } from './util/getImageStream';
 
 const app = express();
 const port = 3005;
@@ -150,26 +154,45 @@ app.get('/download/:identifier', async (req, res) => {
 
 // Item details page
 app.get('/details/:identifier', async (req, res) => {
+    const identifier = req.params.identifier;
     try {
-
-        const item = await getItem(req.params.identifier);
-        const collections: { identifier: string, name: string; }[] = makeArray(item.metadata.collection).map(el => ({
-            identifier: el,
-            name: el
-        }));
-
-        res.render('details', {
+        if (!isValidIaIdentifier(identifier)) throw new Error(`Invalid identifier`);
+        const item = await getItem(identifier);
+        const viewcounts = await getShortViewcounts([identifier]);
+        const data = {
             identifier: req.params.identifier,
             title: item.metadata.title,
             pubDate: item.metadata.date,
             creator: item.metadata.creator,
             topics: item.metadata.subject ? makeArray(item.metadata.subject) : [],
             itemSize: item.item_size,
-            description: decode(item.metadata.description as string ?? "[No description]"),
-            collections,
+            description: decode(item.metadata.description as string ?? "[No description]")
+                .replace(/https?:\/\/archive.org\/search.php/g, '/search')
+                .replace(/https?:\/\/archive.org/g, ''),
             uploader: item.metadata.uploader,
             uploadDate: item.metadata.addeddate,
-        });
+            views: viewcounts[identifier]?.all_time ?? 0
+        };
+
+        if (item.metadata.mediatype === "collection") {
+            const page = tryParseInt(req.query.page);
+            const search = await searchItems(`collection:(${identifier})`, {
+                fields: ["identifier", "title", "mediatype"],
+                rows: 20
+            });
+            const results = await search.getResults(page);
+            console.dir(results);
+
+            res.render('collection', { ...data, results: results.response.docs, numFound: results.response.numFound, page });
+        } else if (item.metadata.mediatype === "account") {
+
+        } else {
+            const collections: { identifier: string, name: string; }[] = makeArray(item.metadata.collection).map(el => ({
+                identifier: el,
+                name: el
+            }));
+            res.render('details', { ...data, collections });
+        }
     } catch (err: any) {
         res.status(404).render('message', { message: `Error: ${err.message}` });
         printErr(req.url, err);
@@ -195,10 +218,34 @@ app.get('/search', async (req, res) => {
     }
 });
 
+app.get("/services/img/:identifier", async (req, res) => {
+    if (!isValidIaIdentifier(req.params.identifier)) {
+        res.status(403).end("Not a valid identifier");
+    }
+    const width = parseInt(`${req.query.w}`) || 0;
+    const height = parseInt(`${req.query.h}`) || 0;
+    try {
+        const imageStream = await getImageStream(`https://archive.org/services/img/${req.params.identifier}`, width, height, "gif");
+        res.setHeader("Content-Type", "image/gif");
+        pipeline(
+            imageStream,
+            res,
+            (err) => {
+                if (err) {
+                    console.error("Pipeline error:", err);
+                    res.status(500).send("Error streaming image");
+                }
+            }
+        );
+    } catch (err) {
+        res.status(500).end("Could not load image");
+    }
+});
 
 app.get('*', function (req, res) {
-    console.log(`404: ${req.url}`)
-    res.status(404).render('message', { message: "Page not found" });
+    console.log(`404: ${req.url}`);
+    res.socket?.destroy();
+    //res.status(404).render('message', { message: "Page not found" });
 });
 
 
