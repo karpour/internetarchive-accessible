@@ -1,0 +1,25 @@
+<%- include('partials/doctype') %>
+<html>
+<head>
+    <title>WAPBack Machine</title>
+    <link rel="stylesheet" href="/x.css" type="text/css" />
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <div class="wbm">
+        <%- include('partials/waybacksearch') %>
+    </div>
+
+    <% if (locals.results) { %>
+    <b><%= results.length %> results</b>
+    <hr>
+    <p>
+        <% results.forEach(r => { %>
+        <%= r.date %><br>
+        <a href="http://web.archive.org/web/<%= r.timestamp %>if_/<%= r.original %>"><%= r.original %></a><br>
+        <% }) %>
+    </p>
+    <% } %>
+</body>
+</html>

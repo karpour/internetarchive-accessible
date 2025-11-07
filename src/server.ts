@@ -34,6 +34,10 @@ function printErr(url: string, err: Error) {
     console.error('\n');
 }
 
+express.static.mime.define({ "image/vnd.wap.wbmp": ["wbmp"] });
+express.static.mime.define({ "image/gif": ["gif"] });
+
+
 app.use("/", express.static(path.join(__dirname, "..", "static")));
 
 app.use(detectMode);
@@ -110,7 +114,8 @@ app.get('/web', async (req, res) => {
         const matches = await getSnapshotMatches(query, {
             limit: 500, // Limit to 100 results
             collapse: "timestamp:6", // Limit to one result per month
-            fl: ["original", "statuscode", "timestamp"] // Specify which fields to return
+            fl: ["original", "statuscode", "timestamp"], // Specify which fields to return
+            filter: (res.locals.mode === "wap" || res.locals.mode === "wap2") && ["statuscode:200", "mimetype:.*vnd.*"] || undefined
         });
 
         const results: {
@@ -181,8 +186,6 @@ app.get('/details/:identifier', async (req, res) => {
                 rows: 20
             });
             const results = await search.getResults(page);
-            console.dir(results);
-
             res.render('collection', { ...data, results: results.response.docs, numFound: results.response.numFound, page });
         } else if (item.metadata.mediatype === "account") {
 
@@ -242,8 +245,23 @@ app.get("/services/img/:identifier", async (req, res) => {
     }
 });
 
-app.get('*', function (req, res) {
-    console.log(`404: ${req.url}`);
+
+
+app.get('*', async (req, res) => {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    console.log(`${ip} 404: ${req.url}`);
+
+    res.setHeader('Content-Type', 'text/plain');
+    function delay(time: number) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    for (let i = 0; i < 1000; i++) {
+        res.write(`${Math.round(Math.random())}`);
+        await delay(10000);
+    }
+    console.log(`${ip} 404: ${req.url} TIMEOUT`);
+
     res.socket?.destroy();
     //res.status(404).render('message', { message: "Page not found" });
 });

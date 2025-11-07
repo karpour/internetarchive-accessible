@@ -1,0 +1,37 @@
+/*.nowrap {white-space:nowrap}
+.centered {text-align:center}
+.centered-small {text-align:center;font-size:x-small}
+.small {font-size:x-small}
+.bluegray {background-color:#C0C0F0}
+.grayrightborder {border-right-width:1px; border-right-color:gray}
+.graytopborder {border-top-width:1px; border-top-color:gray}
+.graybothborders {border-right-width:1px; border-right-color:gray;border-top-width:1px; border-top-color:gray}
+.msgbody{background:url(kc_med2.gif); font-weight: bold}*/
+body {
+    margin: 0
+}
+
+td a:link {
+    color: white
+}
+
+.wbm {
+    background-color: #666666;
+    text-align: center;
+    padding: 2px;
+    color: white;
+    font-size: x-small;
+}
+
+form {
+    text-align: center;
+}
+
+.wbmf {
+    background-color: #fcf5e6;
+    padding: 2px;
+}
+
+p {
+    font-size: x-small;
+}

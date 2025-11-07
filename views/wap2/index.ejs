@@ -1,0 +1,29 @@
+<%- include('partials/doctype') %>
+<html>
+<head>
+    <title>Internet Archive</title>
+    <link rel="stylesheet" href="/x.css" type="text/css" />
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <div class="wbm">
+        Search the history of over <%= (mediacountsRaw.web/1000000000).toFixed(0) %> billion web pages on the Internet.
+        <%- include('partials/waybacksearch') %>
+    </div>
+
+    <p>Internet Archive is a non-profit library of millions of free texts, movies, software, music, websites, and more.</p>
+
+    <form class="wbmf" action="/search" method="get">
+        <input type="text" name="query" /><br>
+        <input type="submit" value="Search the Archive" />
+    </form>
+
+    <h1>Archive news</h1>
+    <p>
+        <% announcements.forEach(item => { %>
+        <a href="<%= item.link %>"><%= item.title %></a><br>
+        <% }); %>
+    </p>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# Example systemd unit file for this service
+[Unit]
+Description=InternetArchive Accessible
+After=network.target
+
+[Service]
+User=internetarchive
+Group=internetarchive
+WorkingDirectory=/var/www/node/internetarchive-accessible
+ExecStart=/usr/bin/node /var/www/node/internetarchive-accessible/dist/server.js
+Restart=always
+RestartSec=10
+Environment=NODE_ENV=production
+
+# Security Hardening
+#ProtectSystem=strict
+ProtectHome=true
+NoNewPrivileges=true
+ReadOnlyPaths=/var/www/node/internetarchive-accessible /usr/bin/
+RestrictAddressFamilies=AF_INET AF_INET6
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+PrivateTmp=true
+PrivateDevices=true
+ProtectClock=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+SystemCallFilter=~@clock @debug @module @mount @raw-io @reboot @swap @privileged @resources
+RemoveIPC=true
+ProtectHostname=true
+PrivateUsers=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=~CAP_WAKE_ALARM ~CAP_SYS_TTY_CONFIG ~CAP_SYS_PACCT ~CAP_BLOCK_SUSPEND ~CAP_SYS_CHROOT ~CAP_SYS_BOOT ~CAP_KILL ~CAP_SYS_TIME ~CAP_SYS_MODULE ~CAP_RAWIO ~CAP_NET_ADMIN
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
